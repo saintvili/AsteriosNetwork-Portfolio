@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="https://repository.asterios.ws/repo-ast-content/ast-engine/css/main.css" type="text/css">
+<script src="https://repo.asterios.ws/repo-js/ajax/3.3.1/jquery.min.js"></script>
+<script src="https://repo.asterios.ws/repo-js/vue/2.3.0/vue.js"></script></head>
+
+ <div id="an">
+<div v-for="asterios in userData">
+
+<div id="an" class="video">
+
+<a id="an"><br><center><h2> <title>{{asterios.fromUserFullname}} | Asterios Network</title> <a :href="'photo.html?photo=' + asterios.id  "><strong alt="asterios.timeAgo">  Дата: {{asterios.date}} </strong></a><h3><br><center> <img id="an" v-bind:src="asterios.imgUrl"></img></center></a><br> 
+<br><p>{{asterios.fromUserFullname | striphtml}} <br>Like: {{asterios.likesCount | striphtml}}<br>Coment Count: {{asterios.commentsCount | striphtml}}</p>
+<hr>
+<br>
+</div>
+
+ <script> 
+ function getUrlVar(){
+    var urlVar = window.location.search; // получаем параметры из урла
+    var arrayVar = []; // массив для хранения переменных
+    var valueAndKey = []; // массив для временного хранения значения и имени переменной
+    var resultArray = []; // массив для хранения переменных
+    arrayVar = (urlVar.substr(1)).split('&'); // разбираем урл на параметры
+    if(arrayVar[0]=="") return false; // если нет переменных в урле
+    for (i = 0; i < arrayVar.length; i ++) { // перебираем все переменные из урла
+        valueAndKey = arrayVar[i].split('='); // пишем в массив имя переменной и ее значение
+        resultArray[valueAndKey[0]] = valueAndKey[1]; // пишем в итоговый массив имя переменной и ее значение
+    }
+    return resultArray; // возвращаем результат
+}
+
+var result = getUrlVar();
+
+
+ var dataURL = 'https://newapi.asterios.ws/widget/user.photos/?id=34886&pid='+(result['page']);
+ var App = new Vue({
+  el: '#an',
+  data: {
+    userData: []
+  },
+  mounted() { 
+    var self = this 
+    $.getJSON(dataURL, function(data) {
+      self.userData = data.photos;
+    });
+  }
+}) 
+
+Vue.filter('striphtml', function (value) {
+  var div = document.createElement("div");
+  div.innerHTML = value;
+  var text = div.textContent || div.innerText || "";
+  return text;
+});
+</script>
+
+
+
+    </body>
+</html>
