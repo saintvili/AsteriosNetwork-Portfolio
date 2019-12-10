@@ -14,15 +14,33 @@
 <br><p>Автор: {{asterios.fromUserFullname | striphtml}} <br>Логин:{{asterios.fromUserUsername | striphtml}} <br>Like: {{asterios.likesCount | striphtml}}<br>Coment Count: {{asterios.commentsCount | striphtml}}</p>
 Дата: {{asterios.date}}
 </center>
-<hr>
-<strong>Комментарии:</strong>
-{{asterios.comments}}
-<br>
-<hr>
-<left><a :href="'https://asterios.ws/'+ asterios.fromUserUsername + '/image/' + asterios.id  " target="_blank">Original Picture</a></left>
+<hr></div></div></div>
+
+<div id="as">
+    <div v-for="asterios in userData">
+<center>
+<strong>Комментарии:</strong></center>
+
+<ul class="items-list comments-list" >
+<li class="custom-list-item comment-item" >
+<a v-bind:href="'https://asterios.ws/'+asterios.fromUserUsername" class="item-logo" v-bind:style="'background-image:url('+asterios.fromUserPhotoUrl+')'"></a>{{asterios.fromUserFullname}}<br>
+<span class="custom-item-link">{{asterios.comment}}</span>
+<div class="item-meta">
+<span class="featured">{{asterios.timeAgo}}</span>
 </div>
+ </li>
+       
+</ul>
+<br>
 
-
+<hr></div>
+</div></div></div></div>
+<div id="an">
+    <div v-for="asterios in userData">
+<left><a id="an" v-bind:href="'https://asterios.ws/'+ asterios.fromUserUsername + '/image/' + asterios.id  " target="_blank">Original Picture</a></left>
+</div>
+</div>
+</div>
  <script> 
 function getUrlVar(){
     var urlVar = window.location.search; // получаем параметры из урла
@@ -64,7 +82,45 @@ Vue.filter('striphtml', function (value) {
 </script>
 
 
+<script> 
+function getUrlVar(){
+    var urlVar = window.location.search; // получаем параметры из урла
+    var arrayVar = []; // массив для хранения переменных
+    var valueAndKey = []; // массив для временного хранения значения и имени переменной
+    var resultArray = []; // массив для хранения переменных
+    arrayVar = (urlVar.substr(1)).split('&'); // разбираем урл на параметры
+    if(arrayVar[0]=="") return false; // если нет переменных в урле
+    for (i = 0; i < arrayVar.length; i ++) { // перебираем все переменные из урла
+        valueAndKey = arrayVar[i].split('='); // пишем в массив имя переменной и ее значение
+        resultArray[valueAndKey[0]] = valueAndKey[1]; // пишем в итоговый массив имя переменной и ее значение
+    }
+    return resultArray; // возвращаем результат
+}
 
+var result = getUrlVar();
+
+
+ var dataURL = 'https://newapi.asterios.ws/widget/image/?hash=5pc&id='+ (result['photo']) ;
+ var App = new Vue({
+  el: '#as',
+  data: {
+    userData: []
+  },
+  mounted() { 
+    var self = this 
+    $.getJSON(dataURL, function(data) {
+      self.userData = data.comments.comments;
+    });
+  }
+}) 
+
+Vue.filter('striphtml', function (value) {
+  var div = document.createElement("div");
+  div.innerHTML = value;
+  var text = div.textContent || div.innerText || "";
+  return text;
+});
+</script>
 
     </body>
 </html>
